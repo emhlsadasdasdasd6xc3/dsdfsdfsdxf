@@ -1,0 +1,20 @@
+{
+	"schemaVersion": 1,
+	"id": "teamtracker",
+	"version": "${version}",
+	"name": "Team Tracker",
+	"description": "Floating name and distance tags for your teammates when they are more than 7 blocks away, even out of render distance. Uses a small relay server.",
+	"authors": ["You"],
+	"license": "CC0-1.0",
+	"environment": "client",
+	"entrypoints": {
+		"client": ["com.teamtracker.TeamTrackerClient"]
+	},
+	"mixins": ["teamtracker.mixins.json"],
+	"depends": {
+		"fabricloader": ">=0.18.1",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
