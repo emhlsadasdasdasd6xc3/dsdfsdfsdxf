@@ -17,6 +17,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
@@ -181,14 +182,36 @@ public class TeamTrackerClient implements ClientModInitializer {
 			matrices.scale(scale, -scale, scale);
 			float x = -font.getWidth(label) / 2.0f;
 			font.draw(
-					label, x, 0.0f, 0xFFFFFFFF, false,
+					label, x, 0.0f, 0xFF55FF55, false,
 					matrices.peek().getPositionMatrix(),
 					consumers,
 					TextRenderer.TextLayerType.SEE_THROUGH,
-					0x66000000,
+					0x00000000,
 					0xF000F0);
 			matrices.pop();
 		}
+	}
+
+	/**
+	 * True when this entity is a relay teammate who currently has a floating distance tag.
+	 * The nametag mixin uses it to hide the vanilla nametag so the two don't overlap.
+	 */
+	public static boolean hasDistanceTag(Entity entity) {
+		MinecraftClient mc = MinecraftClient.getInstance();
+		ClientPlayerEntity self = mc.player;
+		RelayClient r = relay;
+		if (self == null || mc.world == null || r == null || entity == self) {
+			return false;
+		}
+		RelayClient.Member m = r.members().get(entity.getUuid());
+		if (m == null || System.currentTimeMillis() - m.receivedAt() > STALE_MS) {
+			return false;
+		}
+		if (!m.dim().equals(mc.world.getRegistryKey().getValue().toString())
+				|| !m.server().equals(serverId(mc))) {
+			return false;
+		}
+		return self.distanceTo(entity) > config.minDistance;
 	}
 
 	private static double sq(double v) {
