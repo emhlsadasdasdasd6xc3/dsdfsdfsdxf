@@ -109,7 +109,7 @@ public class TeamTrackerClient implements ClientModInitializer {
 				tickCounter = 0;
 				relay.sendPosition(
 						self.getUuid(),
-						self.getName().getString(),
+						config.displayName.isBlank() ? self.getName().getString() : config.displayName.trim(),
 						self.getX(), self.getY(), self.getZ(),
 						currentWorld(mc),
 						serverId(mc));

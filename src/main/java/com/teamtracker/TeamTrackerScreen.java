@@ -27,6 +27,7 @@ public class TeamTrackerScreen extends Screen {
 	private TextFieldWidget relayField;
 	private TextFieldWidget roomField;
 	private int fieldX;
+	private int nameLabelY;
 	private int relayLabelY;
 	private int roomLabelY;
 	private int statusY;
@@ -44,7 +45,7 @@ public class TeamTrackerScreen extends Screen {
 		int w = 240;
 		int half = (w - 4) / 2;
 		int x = this.width / 2 - w / 2;
-		int y = Math.max(30, this.height / 2 - 118);
+		int y = Math.max(30, this.height / 2 - 136);
 		fieldX = x;
 
 		addDrawableChild(ButtonWidget.builder(enabledText(), b -> {
@@ -56,6 +57,16 @@ public class TeamTrackerScreen extends Screen {
 
 		addDrawableChild(new DistanceSlider(x, y, w, 20, cfg.minDistance));
 		y += 28;
+
+		nameLabelY = y;
+		y += 11;
+		TextFieldWidget nameField = new TextFieldWidget(this.textRenderer, x, y, w, 20, Text.literal("Tag name"));
+		nameField.setMaxLength(32);
+		nameField.setPlaceholder(Text.literal("Leave empty to use your Minecraft name"));
+		nameField.setText(cfg.displayName == null ? "" : cfg.displayName);
+		nameField.setChangedListener(text -> cfg.displayName = text.trim());
+		addDrawableChild(nameField);
+		y += 26;
 
 		relayLabelY = y;
 		y += 11;
@@ -205,6 +216,7 @@ public class TeamTrackerScreen extends Screen {
 	public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
 		super.render(ctx, mouseX, mouseY, delta);
 		ctx.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 12, 0xFFFFFFFF);
+		ctx.drawTextWithShadow(this.textRenderer, Text.literal("Your tag name (what teammates see)"), fieldX, nameLabelY, 0xFFA0A0A0);
 		ctx.drawTextWithShadow(this.textRenderer, Text.literal("Relay address"), fieldX, relayLabelY, 0xFFA0A0A0);
 		ctx.drawTextWithShadow(this.textRenderer, Text.literal("Room code"), fieldX, roomLabelY, 0xFFA0A0A0);
 

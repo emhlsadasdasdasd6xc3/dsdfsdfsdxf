@@ -24,6 +24,8 @@ public final class TeamTrackerConfig {
 	public double minDistance = 7.0;
 	/** Master switch, toggled with the "Toggle Team Tracker" keybind. Off = no tags shown. */
 	public boolean enabled = true;
+	/** Name teammates see on your tag. Empty = your Minecraft username. Max 32 characters. */
+	public String displayName = "";
 
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -56,6 +58,7 @@ public final class TeamTrackerConfig {
 					if (loaded != null) {
 						if (loaded.relayUrl == null) loaded.relayUrl = "";
 						if (loaded.room == null) loaded.room = "";
+						if (loaded.displayName == null) loaded.displayName = "";
 						return loaded;
 					}
 				}
